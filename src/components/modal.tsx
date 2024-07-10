@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { buttonVariants } from "./ui/button";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function Modal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,40 +13,76 @@ export function Modal() {
 
   return (
     <>
-      <button
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         type="button"
         onClick={isOpen ? close : open}
         className={cn(buttonVariants({ variant: "default" }))}
       >
         Open Modal
-      </button>
+      </motion.button>
 
-      {isOpen && (
-        <div
-          className="relative z-10"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="fixed inset-0 z-10 w-screen h-screen overflow-y-auto bg-black/80"
-            onClick={close}
-          >
-            <div className="flex min-h-full container justify-center items-center">
-              <ModalCard onClick={close} />
-            </div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <Backdrop key="modal" onClose={close}>
+            <ModalCard onClose={close} />
+          </Backdrop>
+        )}
+      </AnimatePresence>
     </>
   );
 }
 
-function ModalCard({ onClick }: { onClick?: () => void }) {
+function Backdrop({
+  onClose,
+  children,
+}: {
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="relative overflow-hidden rounded-xl bg-card shadow-xl my-8 w-full max-w-lg p-6 flex flex-col gap-8 border border-border">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      className="fixed inset-0 z-10 w-screen h-screen overflow-y-auto bg-black/80 flex justify-center items-center"
+      onClick={onClose}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ModalCard({ onClose }: { onClose?: () => void }) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { y: "-100vh", opacity: 0 },
+        visible: {
+          y: 0,
+          opacity: 1,
+          transition: {
+            duration: 0.2,
+            type: "spring",
+            damping: 20,
+            stiffness: 100,
+          },
+        },
+        exit: { y: "-100vh", opacity: 0 },
+      }}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="relative overflow-hidden rounded-xl bg-card shadow-xl m-8 w-full max-w-lg p-6 flex flex-col gap-8 border border-border"
+    >
       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-        <h3 className="font-bold leading-6">Deactivate account</h3>
+        <h3 id="modal-title" className="font-bold leading-6">
+          Deactivate account
+        </h3>
         <div className="mt-2">
           <p className="text-sm text-muted-foreground">
             Are you sure you want to deactivate your account? All of your data
@@ -54,21 +91,25 @@ function ModalCard({ onClick }: { onClick?: () => void }) {
         </div>
       </div>
       <div className="flex flex-col sm:flex-row-reverse gap-3">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           type="button"
           className={cn(buttonVariants({ variant: "destructive" }))}
-          onClick={onClick}
+          onClick={onClose}
         >
           Deactivate
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           type="button"
           className={cn(buttonVariants({ variant: "outline" }))}
-          onClick={onClick}
+          onClick={onClose}
         >
           Cancel
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
