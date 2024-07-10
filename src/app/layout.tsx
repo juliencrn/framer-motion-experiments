@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { MainNav } from "@/components/main-nav";
+import { config } from "@/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +22,13 @@ export default function RootLayout({
       <body
         className={cn(
           inter.className,
-          "bg-background dark min-h-screen font-sans antialiased"
+          "bg-background dark min-h-screen font-sans antialiased flex flex-col"
         )}
       >
-        {children}
+        <MainNav items={config.mainNav} />
+        <main className="flex-1 border container py-8 flex flex-col">
+          {children}
+        </main>
       </body>
     </html>
   );

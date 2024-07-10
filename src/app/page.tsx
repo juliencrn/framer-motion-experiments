@@ -1,11 +1,11 @@
-import { Modal } from "@/components/modal";
-
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col">
-      <section className="flex-1 border container py-8">
-        <Modal />
-      </section>
-    </main>
+    <section>
+      <h1 className="font-bold text-2xl mb-3">Hello, world!</h1>
+      <p>
+        Visit the pages to see different animations using{" "}
+        <code className="font-mono text-primary">framer-motion</code>.
+      </p>
+    </section>
   );
 }

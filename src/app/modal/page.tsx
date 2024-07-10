@@ -2,17 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 
-export function Modal() {
+export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
   return (
-    <>
+    <section>
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -30,7 +30,7 @@ export function Modal() {
           </Backdrop>
         )}
       </AnimatePresence>
-    </>
+    </section>
   );
 }
 
