@@ -3,7 +3,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { MailIcon } from "lucide-react";
+import { MailIcon, Trash2Icon } from "lucide-react";
 
 const DEFAULT_MESSAGES = 4;
 const titles = [
@@ -23,6 +23,16 @@ export default function Page() {
     Array.from(Array(DEFAULT_MESSAGES).keys())
   );
 
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const toggleSelected = (messageId: number) => {
+    setSelectedIds((ids) =>
+      ids.includes(messageId)
+        ? ids.filter((id) => id !== messageId)
+        : [...ids, messageId]
+    );
+  };
+
   const addMessage = () => {
     const newId = (messageIds.at(-1) || 0) + 1;
     setMessageIds((messages) => [...messages, newId]);
@@ -30,6 +40,13 @@ export default function Page() {
 
   const archiveMessage = (messageId: number) => {
     setMessageIds((ids) => ids.filter((id) => id !== messageId));
+  };
+
+  const archiveSelectedMessages = () => {
+    setSelectedIds((selectedIds) => {
+      selectedIds.forEach(archiveMessage);
+      return [];
+    });
   };
 
   return (
@@ -41,20 +58,32 @@ export default function Page() {
     >
       <div className="mx-auto flex w-full max-w-5xl flex-1 overflow-hidden rounded-2xl bg-card border-2 border-border">
         <div className="flex w-full sm:w-[45%] md:w-[40%] flex-col bg-card py-2">
-          <div className="border-b px-5 py-2 border-border">
+          <div className="border-b px-5 py-2 border-border flex justify-between">
             <button
               className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
               onClick={addMessage}
             >
               <MailIcon className="size-5" />
             </button>
+            <button
+              disabled={selectedIds.length === 0}
+              className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
+              onClick={archiveSelectedMessages}
+            >
+              <Trash2Icon className="size-5" />
+            </button>
           </div>
           <ul className="overflow-y-scroll px-3 pt-2 no-scrollbar">
             {[...messageIds].reverse().map((id) => (
               <li key={id} className="relative py-0.5">
                 <div
-                  onClick={() => archiveMessage(id)}
-                  className="w-full cursor-pointer truncate rounded py-3 px-3 text-left hover:bg-accent/50 hover:text-accent-foreground flex items-center justify-between"
+                  onClick={() => toggleSelected(id)}
+                  className={cn(
+                    "w-full cursor-pointer truncate rounded py-3 px-3 text-left  flex items-center justify-between",
+                    selectedIds.includes(id)
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent/30"
+                  )}
                 >
                   <div>
                     <p className="truncate text-sm font-medium">
