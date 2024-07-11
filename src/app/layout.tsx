@@ -26,9 +26,7 @@ export default function RootLayout({
         )}
       >
         <MainNav items={config.mainNav} />
-        <main className="flex-1 border container py-8 flex flex-col">
-          {children}
-        </main>
+        <main className="flex-1 container py-8 flex flex-col">{children}</main>
       </body>
     </html>
   );

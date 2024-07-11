@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 import { buttonVariants } from "@/components/ui/button";
+import { Step } from "./_components/step";
 
 const MAX_STEP = 4;
 const MIN_STEP = 1;
@@ -33,10 +34,7 @@ export default function Page() {
             type="button"
             disabled={!canPrev}
             onClick={prev}
-            className={cn(
-              buttonVariants({ variant: "link" }),
-              "text-muted-foreground"
-            )}
+            className={cn(buttonVariants({ variant: "ghost" }))}
           >
             Back
           </button>
@@ -54,23 +52,6 @@ export default function Page() {
   );
 }
 
-function Step({ step, currentStep }: { step: number; currentStep: number }) {
-  return (
-    <div
-      className={cn(
-        "rounded-full size-12 fill-white flex justify-center items-center font-bold text-lg border-2 border-transparent ring-4 ring-transparent",
-        step < currentStep &&
-          "bg-primary text-primary-foreground ring-primary/50 border-transparent",
-        step === currentStep && "border-primary bg-transparent text-primary",
-        step > currentStep &&
-          "bg-transparent text-muted ring-transparent border-muted"
-      )}
-    >
-      {step < currentStep ? <CheckIcon className="size-8" /> : step}
-    </div>
-  );
-}
-
 function ContentPlaceholder() {
   return (
     <div className="flex-1 space-y-6 py-4">
@@ -81,24 +62,5 @@ function ContentPlaceholder() {
         <div className="h-2.5 w-4/5 bg-muted rounded"></div>
       </div>
     </div>
-  );
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={3}
-      className={className}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5 13l4 4L19 7"
-        pathLength={1}
-      />
-    </svg>
   );
 }

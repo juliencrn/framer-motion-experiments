@@ -5,16 +5,17 @@ import { buttonVariants } from "./ui/button";
 
 export function MainNav({ items }: { items: MenuItem[] }) {
   return (
-    <nav className="container h-20 flex items-center ">
+    <nav className="container h-20 flex items-center border-b border-foreground">
       {items ? (
-        <ul className="flex gap-6">
+        <ul className="flex gap-3">
           {items.map(({ href, title }, i) => (
             <li key={i}>
               <Link
                 href={href}
                 className={cn(
-                  buttonVariants({ variant: "link" }),
-                  "p-0 text-base"
+                  buttonVariants({
+                    variant: "ghost",
+                  })
                 )}
               >
                 {title}
