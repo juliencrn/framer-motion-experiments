@@ -21,5 +21,9 @@ export const config: Config = {
       title: "SVG Path",
       href: "/svg-path",
     },
+    {
+      title: "Email Client",
+      href: "/email-client",
+    },
   ],
 };
