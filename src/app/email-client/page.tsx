@@ -3,7 +3,8 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { MailIcon, Trash2Icon } from "lucide-react";
+import { LucideIcon, MailIcon, Trash2Icon } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const DEFAULT_MESSAGES = 4;
 const titles = [
@@ -59,45 +60,52 @@ export default function Page() {
       <div className="mx-auto flex w-full max-w-5xl flex-1 overflow-hidden rounded-2xl bg-card border-2 border-border">
         <div className="flex w-full sm:w-[45%] md:w-[40%] flex-col bg-card py-2">
           <div className="border-b px-5 py-2 border-border flex justify-between">
-            <button
-              className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
-              onClick={addMessage}
-            >
-              <MailIcon className="size-5" />
-            </button>
-            <button
-              disabled={selectedIds.length === 0}
-              className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
+            <ButtonIcon onClick={addMessage} icon={MailIcon} />
+            <ButtonIcon
               onClick={archiveSelectedMessages}
-            >
-              <Trash2Icon className="size-5" />
-            </button>
+              icon={Trash2Icon}
+              disabled={selectedIds.length === 0}
+            />
           </div>
-          <ul className="overflow-y-scroll px-3 pt-2 no-scrollbar">
-            {[...messageIds].reverse().map((id) => (
-              <li key={id} className="relative py-0.5">
-                <div
-                  onClick={() => toggleSelected(id)}
-                  className={cn(
-                    "w-full cursor-pointer truncate rounded py-3 px-3 text-left  flex items-center justify-between",
-                    selectedIds.includes(id)
-                      ? "bg-accent text-accent-foreground"
-                      : "hover:bg-accent/30"
-                  )}
+
+          <div className="overflow-y-scroll px-3 pt-2 no-scrollbar">
+            <AnimatePresence>
+              {[...messageIds].reverse().map((id) => (
+                <motion.article
+                  transition={{
+                    duration: 0.2,
+                    type: "tween",
+                  }}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  key={id}
+                  className="relative py-0.5"
                 >
-                  <div>
-                    <p className="truncate text-sm font-medium">
-                      {titles[id % titles.length][0]}
-                    </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {titles[id % titles.length][1]}
-                    </p>
+                  <div
+                    onClick={() => toggleSelected(id)}
+                    className={cn(
+                      "w-full cursor-pointer truncate rounded py-3 px-3 text-left  flex items-center justify-between",
+                      selectedIds.includes(id)
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-accent/30"
+                    )}
+                  >
+                    <div>
+                      <p className="truncate text-sm font-medium">
+                        {titles[id % titles.length][0]}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {titles[id % titles.length][1]}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </motion.article>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
+
         <div className="flex-1 overflow-y-scroll no-scrollbar border-l px-8 py-8 block">
           <h1 className="h-8 rounded bg-muted text-2xl font-bold" />
           <div className="mt-8 space-y-6">
@@ -112,5 +120,25 @@ export default function Page() {
         </div>
       </div>
     </section>
+  );
+}
+
+function ButtonIcon({
+  icon: Icon,
+  onClick,
+  disabled,
+}: {
+  icon: LucideIcon;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      disabled={disabled}
+      className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
+      onClick={onClick}
+    >
+      <Icon className="size-5" />
+    </button>
   );
 }
