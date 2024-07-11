@@ -5,7 +5,7 @@ import { buttonVariants } from "./ui/button";
 
 export function MainNav({ items }: { items: MenuItem[] }) {
   return (
-    <nav className="container h-20 flex items-center border-b border-foreground">
+    <nav className="container h-20 flex items-center border-b border-foreground overflow-x-auto no-scrollbar">
       {items ? (
         <ul className="flex gap-3">
           {items.map(({ href, title }, i) => (

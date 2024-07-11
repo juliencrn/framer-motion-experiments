@@ -29,5 +29,9 @@ export const config: Config = {
       title: "Scroll Header",
       href: "/scroll-header",
     },
+    {
+      title: "Carousel",
+      href: "/carousel",
+    },
   ],
 };
