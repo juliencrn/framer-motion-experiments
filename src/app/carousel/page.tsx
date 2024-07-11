@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { useEventListener } from "usehooks-ts";
 
 let images = [
   "/images/1.jpeg",
@@ -15,37 +17,67 @@ let images = [
 
 export default function Page() {
   const [index, setIndex] = useState(0);
+  const canPrev = index > 0;
+  const canNext = index + 1 < images.length;
+
+  const prev = () => setIndex((i) => (i > 0 ? i - 1 : i));
+  const next = () => setIndex((i) => (i + 1 < images.length ? i + 1 : i));
+
+  useEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      prev();
+    }
+
+    if (event.key === "ArrowRight") {
+      next();
+    }
+  });
 
   return (
-    <section className="flex bg-black overflow-hidden fixed top-20 inset-0">
-      <div className="mx-auto flex-1 flex max-w-5xl flex-col justify-center p-8">
-        <div className="relative w-full aspect-[3/2] bg-muted">
-          <Image
-            src={images[index]}
-            alt={index.toString()}
-            className="object-cover"
-            fill
-          />
+    <MotionConfig transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}>
+      <section className="flex bg-black overflow-hidden fixed top-20 inset-0">
+        <div className="mx-auto flex-1 flex max-w-5xl flex-col justify-center p-8">
+          <div className="relative w-full aspect-[3/2] bg-muted overflow-hidden">
+            <motion.div animate={{ x: `-${index * 100}%` }} className="flex">
+              {images.map((image, i) => (
+                <motion.img
+                  animate={{ opacity: index === i ? 1 : 0.3 }}
+                  key={image}
+                  src={image}
+                  alt={image}
+                  className="object-cover aspect-[3/2]"
+                />
+              ))}
+            </motion.div>
 
-          {index > 0 && (
-            <button
-              className="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 flex size-10 items-center justify-center rounded-full bg-accent transition hover:bg-accent/80"
-              onClick={() => setIndex(index - 1)}
-            >
-              <ChevronLeftIcon className="h-6 w-6" />
-            </button>
-          )}
+            <AnimatePresence>
+              {canPrev && (
+                <motion.button
+                  key="prev"
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 flex size-10 items-center justify-center rounded-full bg-accent transition hover:bg-accent/80"
+                  onClick={prev}
+                >
+                  <ChevronLeftIcon className="h-6 w-6" />
+                </motion.button>
+              )}
 
-          {index + 1 < images.length && (
-            <button
-              className="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 flex size-10 items-center justify-center rounded-full bg-accent transition hover:bg-accent/80"
-              onClick={() => setIndex(index + 1)}
-            >
-              <ChevronRightIcon className="h-6 w-6" />
-            </button>
-          )}
+              {canNext && (
+                <motion.button
+                  key="next"
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 flex size-10 items-center justify-center rounded-full bg-accent transition hover:bg-accent/80"
+                  onClick={next}
+                >
+                  <ChevronRightIcon className="h-6 w-6" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </MotionConfig>
   );
 }
