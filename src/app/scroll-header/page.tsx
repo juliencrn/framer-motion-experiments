@@ -1,7 +1,13 @@
 "use client";
 
 import { arrayOf } from "@/lib/utils";
-import { useScroll, motion, useMotionValue, useTransform } from "framer-motion";
+import {
+  useScroll,
+  motion,
+  useMotionValue,
+  useTransform,
+  useMotionTemplate,
+} from "framer-motion";
 import React, { useEffect, useRef } from "react";
 
 // TODO
@@ -10,44 +16,43 @@ import React, { useEffect, useRef } from "react";
 // - [x] Blur the header when it's 50px
 // - [x] Progressively hide the menu items when the header is 50px
 
-/** Start the animation after this */
-const GAP = 500;
-
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-export default function Page() {
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({
-    container: scrollAreaRef,
-  });
-
-  const height = useMotionValue(80);
-  const heightProgress = useTransform(height, [50, 80], [0, 1]);
-  const heightInvertedProgress = useTransform(heightProgress, (v) => 1 - v);
-  const blur = useTransform(heightInvertedProgress, (v) => `blur(${v * 4}px)`);
-  const backgroundProgress = useTransform(heightProgress, [0, 1], [0.5, 1]);
-  const backgroundColor = useTransform(
-    backgroundProgress,
-    (v) => `hsl(var(--background) / ${v})`
+function useBoundedScroll({ gap, bound }: { gap: number; bound: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll({ container: containerRef });
+  const scrollYBounded = useMotionValue(0);
+  const scrollYBoundedProgress = useTransform(
+    scrollYBounded,
+    [0, bound],
+    [0, 1]
   );
 
   useEffect(() => {
     function updateScrollYBounded(current: number) {
-      if (current < GAP) {
+      if (current < gap) {
         return;
       }
-      let previous = scrollY.getPrevious() ?? 0;
-      let diff = current - previous;
-      let newScrollYBounded = height.get() - diff;
+      const previous = scrollY.getPrevious() ?? 0;
+      const diff = current - previous;
+      const newScrollYBounded = scrollYBounded.get() + diff;
 
-      height.set(clamp(newScrollYBounded, 50, 80));
+      scrollYBounded.set(clamp(newScrollYBounded, 0, bound));
     }
 
-    const unsubscribe = scrollY.on("change", updateScrollYBounded);
-    return unsubscribe;
-  }, [scrollY, height]);
+    return scrollY.on("change", updateScrollYBounded);
+  }, [scrollY, scrollYBounded, bound, gap]);
+
+  return { progress: scrollYBoundedProgress, containerRef };
+}
+
+export default function Page() {
+  const { progress, containerRef } = useBoundedScroll({
+    gap: 500,
+    bound: 50,
+  });
 
   return (
     <section
@@ -57,16 +62,17 @@ export default function Page() {
       }}
     >
       <section className="mx-auto flex w-full max-w-3xl flex-1 overflow-hidden border border-border rounded-xl shadow-xl relative">
-        <div ref={scrollAreaRef} className="z-0 flex-1 overflow-y-scroll">
+        <div ref={containerRef} className="z-0 flex-1 overflow-y-scroll">
           <motion.header
-            style={
-              {
-                height,
-                backgroundColor,
-                "--tw-backdrop-blur": blur,
-              } as unknown as React.CSSProperties
-            }
-            className="flex sticky top-0 left-0 right-0 w-full border-b border-border backdrop-blur-0 shadow-lg"
+            style={{
+              height: useTransform(progress, [0, 1], [80, 50]),
+              backgroundColor: useMotionTemplate`hsl(var(--background) / ${useTransform(
+                progress,
+                [0, 1],
+                [1, 0.5]
+              )})`,
+            }}
+            className="flex sticky top-0 left-0 right-0 w-full border-b border-border backdrop-blur-sm shadow-lg"
           >
             <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-8">
               <p className="flex origin-left items-center text-xl font-semibold uppercase">
@@ -78,7 +84,9 @@ export default function Page() {
                 </span>
               </p>
               <motion.nav
-                style={{ opacity: heightProgress }}
+                style={{
+                  opacity: useTransform(progress, [0, 1], [1, 0]),
+                }}
                 className="flex space-x-4 text-xs font-medium"
               >
                 <a href="#">News</a>
