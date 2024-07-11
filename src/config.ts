@@ -25,5 +25,9 @@ export const config: Config = {
       title: "Email Client",
       href: "/email-client",
     },
+    {
+      title: "Scroll Header",
+      href: "/scroll-header",
+    },
   ],
 };

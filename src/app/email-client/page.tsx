@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { arrayOf, cn } from "@/lib/utils";
 import { useState } from "react";
 import { LucideIcon, MailIcon, Trash2Icon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,9 +20,7 @@ const titles = [
 ];
 
 export default function Page() {
-  const [messageIds, setMessageIds] = useState(
-    Array.from(Array(DEFAULT_MESSAGES).keys())
-  );
+  const [messageIds, setMessageIds] = useState(arrayOf(DEFAULT_MESSAGES));
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -109,7 +107,7 @@ export default function Page() {
         <div className="flex-1 overflow-y-scroll no-scrollbar border-l px-8 py-8 block">
           <h1 className="h-8 rounded bg-muted text-2xl font-bold" />
           <div className="mt-8 space-y-6">
-            {Array.from(Array(9).keys()).map((i) => (
+            {arrayOf(9).map((i) => (
               <div key={i} className="space-y-2 text-sm">
                 <p className="h-4 w-5/6 rounded bg-muted" />
                 <p className="h-4 rounded bg-muted" />
