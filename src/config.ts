@@ -33,5 +33,9 @@ export const config: Config = {
       title: "Carousel",
       href: "/carousel",
     },
+    {
+      title: "Resizable",
+      href: "/resizable",
+    },
   ],
 };

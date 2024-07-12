@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, Variant } from "framer-motion";
+import { AnimatedCheckIcon } from "@/components/animated-check-icon";
+import { motion } from "framer-motion";
 
 type Status = "active" | "upcoming" | "completed";
 
@@ -70,37 +71,11 @@ export function Step({
         }}
       >
         {status === "completed" ? (
-          <CheckIcon className="size-6" />
+          <AnimatedCheckIcon svgProps={{ className: "size-6" }} />
         ) : (
           <span className="font-bold">{step}</span>
         )}
       </motion.div>
     </motion.div>
-  );
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={3}
-      className={className}
-    >
-      <motion.path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        animate={{ pathLength: 1 }}
-        initial={{ pathLength: 0 }}
-        d="M5 13l4 4L19 7"
-        transition={{
-          delay: 0.1,
-          type: "tween",
-          ease: "easeOut",
-          duration: 0.3,
-        }}
-      />
-    </svg>
   );
 }
