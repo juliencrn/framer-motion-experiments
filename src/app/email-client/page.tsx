@@ -49,13 +49,8 @@ export default function Page() {
   };
 
   return (
-    <section
-      className="flex flex-1 flex-col overscroll-y-contain items-center justify-center"
-      style={{
-        maxHeight: "calc(100vh - 80px - 4rem)",
-      }}
-    >
-      <div className="mx-auto flex w-full max-w-5xl flex-1 overflow-hidden rounded-2xl bg-card border-2 border-border">
+    <section className="flex-1 flex flex-col justify-center items-center max-h-screen container py-8">
+      <div className="mx-auto flex w-full max-w-5xl overflow-hidden rounded-2xl bg-card border-2 border-border">
         <div className="flex w-full sm:w-[45%] md:w-[40%] flex-col bg-card py-2">
           <div className="border-b px-5 py-2 border-border flex justify-between">
             <ButtonIcon onClick={addMessage} icon={MailIcon} />

@@ -12,24 +12,26 @@ export default function Page() {
   const close = () => setIsOpen(false);
 
   return (
-    <section>
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        type="button"
-        onClick={isOpen ? close : open}
-        className={cn(buttonVariants({ variant: "default" }))}
-      >
-        Open Modal
-      </motion.button>
+    <section className="container grid gap-6 max-w-4xl py-12 sm:py-16 lg:py-24">
+      <div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="button"
+          onClick={isOpen ? close : open}
+          className={cn(buttonVariants({ variant: "default" }))}
+        >
+          Open Modal
+        </motion.button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <Backdrop key="modal" onClose={close}>
-            <ModalCard onClose={close} />
-          </Backdrop>
-        )}
-      </AnimatePresence>
+        <AnimatePresence>
+          {isOpen && (
+            <Backdrop key="modal" onClose={close}>
+              <ModalCard onClose={close} />
+            </Backdrop>
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 }

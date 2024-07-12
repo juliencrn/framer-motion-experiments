@@ -55,13 +55,8 @@ export default function Page() {
   });
 
   return (
-    <section
-      className="flex flex-1 flex-col overscroll-y-contain items-center justify-center"
-      style={{
-        maxHeight: "calc(100vh - 80px - 4rem)",
-      }}
-    >
-      <section className="mx-auto flex w-full max-w-3xl flex-1 overflow-hidden border border-border rounded-xl shadow-xl relative">
+    <section className="flex flex-1 flex-col overscroll-y-contain items-center justify-center max-h-screen py-8 container">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 overflow-hidden border border-border rounded-xl shadow-xl relative">
         <div ref={containerRef} className="z-0 flex-1 overflow-y-scroll">
           <motion.header
             style={{
@@ -117,7 +112,7 @@ export default function Page() {
             </div>
           </main>
         </div>
-      </section>
+      </div>
     </section>
   );
 }

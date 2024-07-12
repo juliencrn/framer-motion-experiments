@@ -5,14 +5,16 @@ export type MenuItem = {
 
 export type Config = {
   mainNav: MenuItem[];
+  links: {
+    github: string;
+  };
 };
 
 export const config: Config = {
+  links: {
+    github: "https://github.com/juliencrn/framer-motion-experiments",
+  },
   mainNav: [
-    {
-      title: "Home",
-      href: "/",
-    },
     {
       title: "Modal",
       href: "/modal",

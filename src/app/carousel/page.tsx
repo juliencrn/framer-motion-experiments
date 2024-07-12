@@ -40,7 +40,7 @@ export default function Page() {
 
   return (
     <MotionConfig transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}>
-      <section className="flex bg-black overflow-hidden fixed top-20 inset-0">
+      <section className="flex bg-black overflow-hidden fixed inset-0">
         <div className="mx-auto flex-1 flex max-w-5xl flex-col justify-center p-8 gap-6">
           <div className="relative w-full aspect-[3/2] bg-muted overflow-hidden">
             <motion.div animate={{ x: `-${index * 100}%` }} className="flex">

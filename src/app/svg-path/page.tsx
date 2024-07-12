@@ -18,7 +18,7 @@ export default function Page() {
   const prev = () => setStep((s) => (canPrev ? s - 1 : s));
 
   return (
-    <section className="flex-1 flex justify-center items-start">
+    <section className="flex-1 flex justify-center items-center">
       <div className="relative overflow-hidden rounded-xl bg-card shadow-xl m-8 w-full max-w-lg p-6 flex flex-col gap-8 border border-border">
         <div className="flex justify-between">
           <Step step={1} currentStep={step} />
